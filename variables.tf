@@ -94,3 +94,22 @@ variable "source_code_hash" {
   description = "Used to trigger updates when file contents change.  Must be set to a base64-encoded SHA256 hash of the package file specified with either filename or s3_key."
   type        = string
 }
+
+variable "layer_name" {
+  type = string
+  default = null
+}
+variable "layer_s3_bucket" {
+  type = string
+  default = null
+}
+
+variable "layer_s3_key" {
+  type = string
+  default = null
+}
+
+variable "layer_compatible_runtimes" {
+  type = list(string)
+  default = null
+}

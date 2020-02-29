@@ -11,6 +11,7 @@ resource aws_lambda_function this {
   timeout                        = var.lambda_timeout
   tags                           = var.tags
   source_code_hash               = var.source_code_hash
+  layers = var.layer_name != null ? ["${aws_lambda_layer_version.lambda_layer[0].arn}"] : null
 
   dynamic "vpc_config" {
     for_each = var.vpc_config == null ? [] : [var.vpc_config]
@@ -41,6 +42,14 @@ resource aws_lambda_function this {
   }
 
   depends_on = [aws_cloudwatch_log_group.this]
+}
+
+resource "aws_lambda_layer_version" "lambda_layer" {
+  count = var.layer_name != null ? 1 : 0
+  layer_name = var.layer_name
+  s3_bucket = var.layer_s3_bucket
+  s3_key = var.layer_s3_key
+  compatible_runtimes = var.layer_compatible_runtimes
 }
 
 resource aws_lambda_function_event_invoke_config this {
